@@ -1219,3 +1219,17 @@ hr {
 .highlight .il {
 	color: #099
 }
+/* Make the image responsive */
+.responsive-image {
+	width: 100%;
+	height: auto;
+	max-width: 600px; /* Set a max-width to prevent it from being too large */
+  }
+  
+  /* Optional: Adjust for smaller screens */
+  @media (max-width: 768px) {
+	.responsive-image {
+	  width: 80%; /* Adjust as needed for mobile */
+	}
+  }
+  
