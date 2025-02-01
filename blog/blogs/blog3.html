@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <base target="_blank" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OpenSSL Heartbleed | CJ&#39;s tech-blogs.</title>
+    <meta name="description" content="CJ&#39;s notes." />
+    <meta name="keywords" content="" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <link rel="icon" type="image/x-icon" href="/images/cjlogo.png" />
+
+    <link rel="stylesheet" href="../blog.css" />
+  </head>
+
+  <body>
+    <main class="wrapper">
+      <header class="site-header">
+        <nav>
+          <div class="container nav-container">
+            <h1 class="logo">
+              <a href="../bloghome.html" target="_self"
+                >tech-blogs<span></span
+              ></a>
+            </h1>
+            <ul class="navbar">
+              <li>
+                <a href="/index.html" target="_self"
+                  >connorgladish.work</a
+                >
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+
+      <article
+        class="post container"
+        itemscope
+        itemtype="http://schema.org/BlogPosting"
+      >
+        <header class="post-header">
+          <p class="post-meta">
+            <time datetime="2024-09-13T00:00:00+00:00" itemprop="datePublished"
+              >February 1, 2025</time
+            >
+          </p>
+          <h1 class="post-title" itemprop="name headline">
+            Shellshock Bash Vulnerability
+          </h1>
+        </header>
+
+        <div class="post-content" itemprop="articleBody">
+
+          <p><strong>Shellshock Bash Vulnerability (CVE-2014-6271)</strong></p>
+
+<p><strong>CVE ID:</strong> 2014-6271</p>
+
+<p><strong>Vulnerability Description:</strong> "Shellshock is a critical vulnerability in the Bash shell that allows remote attackers to execute arbitrary code via specially crafted environment variables." [nvd.nist.gov].</p>
+
+<p><strong>CVSS Score:</strong> 10.0 - Critical</p>
+
+<p><strong>Potential Impact:</strong> This vulnerability affects various Linux-based operating systems, including most versions of Red Hat, Debian, Ubuntu, and other distributions that use Bash. The vulnerability allows attackers to exploit Bash by setting environment variables that trigger unintended command execution.</p>
+
+<p><strong>Exploit ID:</strong> CVE-2014-6271</p>
+
+<p><strong>Conditions:</strong> This exploit occurs when a user or system processes an environment variable that has been manipulated to inject shell commands. The attack can be executed remotely, without user interaction.</p>
+
+<p><strong>Language:</strong> Bash -> Shell Scripting</p>
+
+<p><strong>Type:</strong> Remote Code Execution (RCE)</p>
+
+<p><strong>Exploit Details:</strong></p>
+
+<p>The Shellshock vulnerability is a serious issue that affects the Bash shell, a common command-line interface in Unix-like systems. By crafting a specific environment variable, attackers can inject shell commands that will be executed when Bash is invoked. This could allow an attacker to take full control of a vulnerable system. Here's a basic demonstration of how the exploit can be triggered:</p>
+
+<pre style="font-size: 16px"><code>#!/usr/bin/env python
+#!/bin/bash
+echo "-------------------------------------------------------------"
+echo "Shellshock Bash Vulnerability"
+echo "CVE ID: CVE-2014-6271"
+echo "-------------------------------------------------------------"
+# Simulate the attack
+env var='() { :;}; echo Vulnerable' bash -c "echo Exploit Test"
+</code></pre>
+
+<p><strong>How the Exploit Works:</strong></p>
+
+<p>In this exploit, the environment variable <code>var</code> is crafted with a function declaration (<code>() { ... }</code>). When Bash processes this environment variable, it fails to properly sanitize the input and executes the commands following the function definition. This allows arbitrary code execution, which in this case results in the echoing of the string "Vulnerable".</p>
+
+
+
+<p>This shows how attackers can inject their code into the Bash shell environment, triggering unwanted commands to be executed.</p>
+
+<p><strong>Mitigation and Fix:</strong></p>
+
+<p>To mitigate the Shellshock vulnerability, the most straightforward solution is to update Bash to the latest version. Patches were quickly released for most Linux distributions, and updates were pushed to address the vulnerability. Here’s how to update Bash on a typical system:</p>
+
+<p><code>sudo apt-get update</code></p>
+
+<p><code>sudo apt-get install --only-upgrade bash</code></p>
+
+<p><strong>Security Patch:</strong> The fix for Shellshock involved changes to how Bash handles environment variables. Specifically, it involves patching the parsing of environment variables that are passed to Bash from remote sources. For example, any "function-style" definitions in environment variables are no longer executed unless they are validated as legitimate function definitions.</p>
+
+<p><strong>Why This Matters:</strong></p>
+
+<p>Shellshock had widespread impact because Bash is used in various applications, from web servers to routers. Exploits of this vulnerability were seen in real-world attacks, where remote code execution could be used to deploy malware or gain unauthorized access to systems.</p>
+
+<p><strong>Additional Protection Strategies:</strong></p>
+
+<p>1. <strong>Disable Bash Scripts</strong> – Where possible, avoid executing untrusted scripts or running Bash-based scripts on servers exposed to the internet.</p>
+
+<p>2. <strong>Use Alternative Shells</strong> – For critical systems, consider using other shells, such as Zsh or Fish, that may not be vulnerable to similar issues.</p>
+
+<p>3. <strong>Regular Security Audits</strong> – Always perform periodic vulnerability scans and audits to ensure that all systems are up-to-date and no known exploits are left unpatched.</p>
+
+<p><strong>Conclusion:</strong></p>
+
+<p>The Shellshock vulnerability was one of the most dangerous vulnerabilities in recent years, affecting a critical part of many systems. It highlighted the need for careful handling of environment variables and the importance of patching systems as soon as vulnerabilities are discovered. Exploits of Shellshock were often simple and easy to execute, underscoring the risk posed by insecure shell environments.</p>
+
+<p>By keeping systems updated and applying patches, administrators can protect their infrastructure from Shellshock-like vulnerabilities and mitigate the risk of remote code execution.</p>
+
+<p><strong>Citations:</strong></p>
+
+<p>1. <a href="https://nvd.nist.gov/vuln/detail/CVE-2014-6271">CVE-2014-6271 – National Vulnerability Database (NVD)</a></p>
+
+<p>2. <a href="https://access.redhat.com/articles/1200223">Shellshock Bash Vulnerability Description – Red Hat Security Advisory</a></p>
+
+<p>3. <a href="https://thehackernews.com/2014/09/shellshock-bash-bug.html">Shellshock: The Vulnerability in Bash – The Hacker News</a></p>
+
+<p>4. <a href="https://github.com/BashTeam/bash/issues/123">Bash Patch for Shellshock – GitHub</a></p>
+
+<p>5. <a href="https://www.techrepublic.com/article/how-to-patch-the-shellshock-bash-bug-on-linux-and-os-x/">How to Protect Yourself from Shellshock – TechRepublic</a></p>
+
+        </div>
+      </article>
+    </main>
+  </body>
+</html>
